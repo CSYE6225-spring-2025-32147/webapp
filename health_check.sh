@@ -8,7 +8,7 @@ DB_NAME="health_checker_db"
 GROUP_NAME="csye6225group"
 USER_NAME=“surya”
 APP_DIR="/opt/csye6225"
-ARCHIVE_PATH="/surya/ChinnasuryaPrasad_Vulavala_002056815_02.zip"  # Updated path to the zip file
+ARCHIVE_PATH="/tmp/ChinnasuryaPrasad_Vulavala_002056815_02.zip"  # Updated path to the zip file
 
 # Update package lists and upgrade packages
 echo "Updating package lists and upgrading packages..."
