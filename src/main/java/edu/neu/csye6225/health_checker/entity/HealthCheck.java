@@ -1,7 +1,7 @@
 package edu.neu.csye6225.health_checker.entity;
 
-
 import java.time.LocalDateTime;
+import java.time.ZoneOffset;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -13,29 +13,28 @@ public class HealthCheck {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private Long checkId; // The unique identifier for the health check
+    private Long checkId;
 
-    private LocalDateTime dateTime; // Timestamp for the health check record
+    private LocalDateTime dateTime;
 
-    // Default constructor
+
     public HealthCheck() {
-        this.dateTime = LocalDateTime.now(); // Set current time when the health check is created
+        this.dateTime = LocalDateTime.now(ZoneOffset.UTC);
     }
 
-    // Getters and setters for the fields
-    public Long getId() {
+    public Long getCheckId() {
         return checkId;
     }
 
-    public void setId(Long id) {
-        this.checkId = id;
+    public void setCheckId(Long checkId) {
+        this.checkId = checkId;
     }
 
-    public LocalDateTime getTimestamp() {
+    public LocalDateTime getDatetime() {
         return dateTime;
     }
 
-    public void setTimestamp(LocalDateTime timestamp) {
-        this.dateTime = timestamp;
+    public void setDatetime(LocalDateTime datetime) {
+        this.dateTime = datetime;
     }
 }
