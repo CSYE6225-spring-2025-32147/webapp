@@ -23,9 +23,7 @@ mysql --version
 If not installed, install MySQL from the MySQL Community Server.
 
 Start the MySQL server:
-```sh
-mysql.server start
-```
+
 
 ### 3. Install Maven
 Check if Maven is installed:
@@ -42,7 +40,7 @@ git clone <repository-url>
 cd <repository-folder>
 ```
 ### 2. Configure application.properties
-Modify username and password in src/main/resources/application.properties
+Configure the `application.properties` file with your database settings.
 
 ## Running the Application
 
@@ -61,9 +59,9 @@ After running the application, check the database:
 mysql -u root -p
 ```
 ```sh
-USE health-check-db;
+USE DATABASE_NAME;
 SHOW TABLES;
-SELECT * FROM health_check;
+SELECT * FROM TABLE_NAME;
 ```
 
 ## API endpoints
