@@ -5,10 +5,10 @@ set -e
 
 # Define variables
 DB_NAME="health_checker_db"
-GROUP_NAME="csye6225group"
-USER_NAME=“surya”
+GROUP_NAME="csye6225"
+USER_NAME="surya"
 APP_DIR="/opt/csye6225"
-ARCHIVE_PATH="/tmp/ChinnasuryaPrasad_Vulavala_002056815_02.zip"  # Updated path to the zip file
+ARCHIVE_PATH="/tmp/ChinnasuryaPrasad_Vulavala_002056815_02.zip"
 
 # Update package lists and upgrade packages
 echo "Updating package lists and upgrading packages..."
@@ -19,14 +19,13 @@ echo "Installing MySQL Server..."
 sudo apt install -y mysql-server
 
 # Start and enable MySQL service
+echo "Starting MySQL Server..."
 sudo systemctl enable --now mysql
 
-# Secure MySQL installation (optional)
-# sudo mysql_secure_installation
 
-# Create database (without creating a user)
+# Create database
 echo "Creating MySQL database..."
-sudo mysql -e "CREATE DATABASE IF NOT EXISTS \⁠ ${DB_NAME}\ ⁠;"
+sudo mysql -e "CREATE DATABASE IF NOT EXISTS ${DB_NAME};"
 
 # Create a new group
 echo "Creating group ${GROUP_NAME}..."
