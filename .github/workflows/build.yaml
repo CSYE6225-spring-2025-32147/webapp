@@ -1,0 +1,29 @@
+name: CI - Run Tests
+
+on:
+  pull_request:
+    branches:
+      - main
+
+jobs:
+  test:
+    name: Run Application Tests
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Set Up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Set Up Dependencies
+        run: |
+          chmod +x mvnw
+          ./mvnw clean install -DskipTests
+
+      - name: Run Tests
+        run: ./mvnw test
