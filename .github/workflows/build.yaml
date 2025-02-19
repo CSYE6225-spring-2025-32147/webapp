@@ -6,9 +6,10 @@ on:
       - main
 
 jobs:
-  test:
+  test-development:
     name: Run Application Tests
     runs-on: ubuntu-latest
+    environment: development  # Use the 'development' environment
 
     steps:
       # Checkout the repository
@@ -22,19 +23,11 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      # Set up dependencies and run Maven build
-      - name: Set Up Dependencies
-        run: |
-          mvn clean install -DskipTests
-
-      # Set up environment variables from GitHub Secrets
-      - name: Set up environment variables
-        run: |
-          echo "spring.datasource.url=${{ secrets.DB_URL }}" >> $GITHUB_ENV
-          echo "spring.datasource.username=${{ secrets.DB_USRNAME }}" >> $GITHUB_ENV
-          echo "spring.datasource.password=${{ secrets.DB_PASSWORD }}" >> $GITHUB_ENV
-          echo "server.port=${{ secrets.PRT_NBR }}" >> $GITHUB_ENV
-
-      # Run Tests using Maven
-      - name: Run Tests
-        run: mvn test
+      # Set up dependencies and run Maven build (including tests)
+      - name: Set Up Dependencies and Run Tests
+        env:
+          DB_URL: ${{ secrets.DB_URL }}
+          DB_USRNAME: ${{ secrets.DB_USRNAME }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          PRT_NBR: ${{ secrets.PRT_NBR }}
+        run: mvn clean install  # This will run tests as part of the build
