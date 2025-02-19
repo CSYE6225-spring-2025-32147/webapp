@@ -25,10 +25,9 @@ jobs:
       # Set up dependencies and run Maven build
       - name: Set Up Dependencies
         run: |
-          chmod +x mvnw
-          ./mvnw clean install -DskipTests
+          mvn clean install -DskipTests
 
-      # Set environment variables from GitHub Secrets
+      # Set up environment variables from GitHub Secrets
       - name: Set up environment variables
         run: |
           echo "spring.datasource.url=${{ secrets.DB_URL }}" >> $GITHUB_ENV
@@ -38,4 +37,4 @@ jobs:
 
       # Run Tests using Maven
       - name: Run Tests
-        run: ./mvnw test
+        run: mvn test
