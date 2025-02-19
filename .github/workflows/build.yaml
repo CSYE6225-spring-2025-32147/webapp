@@ -21,9 +21,7 @@ jobs:
           java-version: '17'
 
       - name: Set Up Dependencies
-        run: |
-          chmod +x mvnw
-          ./mvnw clean install -DskipTests
+        run: mvn clean install -DskipTests
 
       - name: Run Tests
-        run: ./mvnw test
+        run: mvn test
