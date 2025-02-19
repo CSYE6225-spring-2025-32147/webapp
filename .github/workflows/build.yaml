@@ -11,17 +11,31 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
+      # Checkout the repository
       - name: Checkout Repository
         uses: actions/checkout@v4
 
+      # Set up JDK 17
       - name: Set Up JDK 17
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: '17'
 
+      # Set up dependencies and run Maven build
       - name: Set Up Dependencies
-        run: mvn clean install -DskipTests
+        run: |
+          chmod +x mvnw
+          ./mvnw clean install -DskipTests
 
+      # Set environment variables from GitHub Secrets
+      - name: Set up environment variables
+        run: |
+          echo "spring.datasource.url=${{ secrets.DB_URL }}" >> $GITHUB_ENV
+          echo "spring.datasource.username=${{ secrets.DB_USRNAME }}" >> $GITHUB_ENV
+          echo "spring.datasource.password=${{ secrets.DB_PASSWORD }}" >> $GITHUB_ENV
+          echo "server.port=${{ secrets.PRT_NBR }}" >> $GITHUB_ENV
+
+      # Run Tests using Maven
       - name: Run Tests
-        run: mvn test
+        run: ./mvnw test
