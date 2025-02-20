@@ -6,9 +6,20 @@ on:
       - main
 
 jobs:
-  test:
+  test-development:
     name: Run Application Tests
     runs-on: ubuntu-latest
+    environment: development
+
+    services:
+      mysql:
+        image: mysql:8
+        ports:
+          - 3306:3306
+        env:
+          MYSQL_ROOT_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          MYSQL_DATABASE: ${{ secrets.DB_DATABASE }}
+        options: --health-cmd="mysqladmin ping --silent" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
       - name: Checkout Repository
@@ -20,10 +31,10 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Set Up Dependencies
-        run: |
-          chmod +x mvnw
-          ./mvnw clean install -DskipTests
-
-      - name: Run Tests
-        run: ./mvnw test
+      - name: Set Up Dependencies and Run Tests
+        env:
+          DB_URL: ${{ secrets.DB_URL }}
+          DB_USRNAME: ${{ secrets.DB_USRNAME }}
+          DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+          PRT_NBR: ${{ secrets.PRT_NBR }}
+        run: mvn clean install
