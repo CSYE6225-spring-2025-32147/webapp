@@ -38,7 +38,7 @@ public class HealthCheckApplicationTest {
                 .when()
                 .get("/healthz")  // Path for the health check endpoint
                 .then()
-                .statusCode(200)  // Assert that the response code is 200
+                .statusCode(201)  // Assert that the response code is 200
                 .header("Cache-Control", "no-cache, no-store, must-revalidate")
                 .header("Pragma", "no-cache")
                 .header("X-Content-Type-Options", "nosniff");
