@@ -1,0 +1,81 @@
+name: Packer Image Build on PR Merge
+
+on:
+  pull_request:
+    types:
+      - closed
+    branches:
+      - main
+
+jobs:
+  build-packer-image:
+    if: github.event.pull_request.merged == true
+    name: Package Application and Build Packer AMI
+    runs-on: ubuntu-latest
+    environment: development
+
+    env:
+      # AWS Credentials
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      # Application Variables
+      DB_URL: ${{ secrets.DB_URL }}
+      DB_USRNAME: ${{ secrets.DB_USRNAME }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      PRT_NBR: ${{ secrets.PRT_NBR }}
+
+      # Packer Variables (Automatically Picked Up)
+      PKR_VAR_DB_URL: ${{ secrets.DB_URL }}
+      PKR_VAR_DB_USRNAME: ${{ secrets.DB_USRNAME }}
+      PKR_VAR_DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      PKR_VAR_DB_NAME: ${{ secrets.DB_DATABASE }}
+      PKR_VAR_PRT_NBR: ${{ secrets.PRT_NBR }}
+      PKR_VAR_VOLUME_SIZE: ${{ secrets.VOLUME_SIZE }}
+      PKR_VAR_VOLUME_TYPE: ${{ secrets.VOLUME_TYPE }}
+      PKR_VAR_SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
+      PKR_VAR_SUBNET_ID: ${{ secrets.SUBNET_ID }}
+      PKR_VAR_INSTANCE_TYPE: ${{ secrets.INSTANCE_TYPE }}
+      PKR_VAR_REGION: ${{ secrets.REGION }}
+
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+
+      - name: Install AWS CLI
+        uses: unfor19/install-aws-cli-action@v1
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.REGION }}
+
+      - name: Set Up JDK 17
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Package Application
+        run: mvn clean -B package
+
+      - name: Install Packer
+        uses: hashicorp/setup-packer@main
+
+      - name: Initialize Packer
+        working-directory: packer
+        run: packer init .
+
+      - name: Run Packer fmt Check
+        working-directory: packer
+        run: packer fmt -check .
+
+      - name: Run Packer Validate
+        working-directory: packer
+        run: packer validate .
+
+      - name: Run Packer Build
+        working-directory: packer
+        run: packer build .
