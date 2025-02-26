@@ -43,11 +43,11 @@ variable "OWNER_ID" {
 
 # Amazon AMI Source Configuration
 source "amazon-ebs" "my-ami" {
-  ami_name        = "${var.AMI_NAME}_${formatdate("YYYY_MM_DD_HH_MM_SS", timestamp())}"
+  ami_name        = "${var.AMI_NAME}_${formatdate("YYYY_MM_DD_HH_mm_ss", timestamp())}"
   ami_description = var.AMI_DESCRIPTION
-  instance_type   = var.instance_type
-  region          = var.region
-  subnet_id       = var.subnet_id
+  instance_type   = var.INSTANCE_TYPE
+  region          = var.REGION
+  subnet_id       = var.SUBNET_ID
 
   source_ami_filter {
     filters = {
@@ -59,7 +59,7 @@ source "amazon-ebs" "my-ami" {
     owners      = [var.OWNER_ID] # Canonical’s official AWS account
   }
 
-  ssh_username = var.ssh_username
+  ssh_username = var.SSH_USERNAME
 
   launch_block_device_mappings {
     delete_on_termination = true
