@@ -13,10 +13,10 @@ variable "DB_USRNAME" { type = string }
 variable "DB_PASSWORD" { type = string }
 variable "DB_NAME" { type = string }
 variable "PRT_NBR" { type = string }
-variable "ssh_username" { type = string }
-variable "subnet_id" { type = string }
-variable "instance_type" { type = string }
-variable "region" {
+variable "SSH_USERNAME" { type = string }
+variable "SUBNET_ID" { type = string }
+variable "INSTANCE_TYPE" { type = string }
+variable "REGION" {
   type    = string
   default = "us-east-1"
 }
