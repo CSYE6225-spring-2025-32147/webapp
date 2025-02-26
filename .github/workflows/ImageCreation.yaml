@@ -34,6 +34,7 @@ jobs:
       PKR_VAR_SUBNET_ID: ${{ secrets.SUBNET_ID }}
       PKR_VAR_INSTANCE_TYPE: ${{ secrets.INSTANCE_TYPE }}
       PKR_VAR_REGION: ${{ secrets.REGION }}
+      PKR_VAR_AMI_USER: ${{ secrets.AMI_USER }}
 
     services:
       mysql:
