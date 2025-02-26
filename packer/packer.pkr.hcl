@@ -12,7 +12,6 @@ variable "DB_URL" { type = string }
 variable "DB_USRNAME" { type = string }
 variable "DB_PASSWORD" { type = string }
 variable "DB_NAME" { type = string }
-variable "PRT_NBR" { type = string }
 variable "SSH_USERNAME" { type = string }
 variable "SUBNET_ID" { type = string }
 variable "INSTANCE_TYPE" { type = string }
@@ -78,8 +77,7 @@ build {
       "DB_URL=${var.DB_URL}",
       "DB_USRNAME=${var.DB_USRNAME}",
       "DB_PASSWORD=${var.DB_PASSWORD}",
-      "DB_NAME=${var.DB_NAME}",
-      "PRT_NBR=${var.PRT_NBR}"
+      "DB_NAME=${var.DB_NAME}"
     ]
     script = "scripts/pre-setup.sh"
   }

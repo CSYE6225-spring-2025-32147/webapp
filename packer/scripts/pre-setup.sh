@@ -43,7 +43,6 @@ mysql -u root -p"${DB_PASSWORD}" -e "CREATE DATABASE IF NOT EXISTS ${DB_NAME};"
 echo "export DB_URL=${DB_URL}" | sudo tee -a /etc/environment
 echo "export DB_USERNAME=${DB_USRNAME}" | sudo tee -a /etc/environment
 echo "export DB_PASSWORD=${DB_PASSWORD}" | sudo tee -a /etc/environment
-echo "export PRT_NBR=${PRT_NBR}" | sudo tee -a /etc/environment
 
 # Make sure the changes take effect
 source /etc/environment
