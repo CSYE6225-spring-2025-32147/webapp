@@ -16,14 +16,12 @@ jobs:
       DB_URL: ${{ secrets.DB_URL }}
       DB_USRNAME: ${{ secrets.DB_USRNAME }}
       DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
-      PRT_NBR: ${{ secrets.PRT_NBR }}
 
       # Packer Variables (Automatically Picked Up)
       PKR_VAR_DB_URL: ${{ secrets.DB_URL }}
       PKR_VAR_DB_USRNAME: ${{ secrets.DB_USRNAME }}
       PKR_VAR_DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
       PKR_VAR_DB_NAME: ${{ secrets.DB_DATABASE }}
-      PKR_VAR_PRT_NBR: ${{ secrets.PRT_NBR }}
       PKR_VAR_VOLUME_SIZE: ${{ secrets.VOLUME_SIZE }}
       PKR_VAR_VOLUME_TYPE: ${{ secrets.VOLUME_TYPE }}
       PKR_VAR_SSH_USERNAME: ${{ secrets.SSH_USERNAME }}
