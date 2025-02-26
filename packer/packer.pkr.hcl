@@ -40,6 +40,10 @@ variable "OWNER_ID" {
   default = "099720109477"
 }
 
+variable "AMI_USER" {
+  type = string
+}
+
 # Amazon AMI Source Configuration
 source "amazon-ebs" "my-ami" {
   ami_name        = "${var.AMI_NAME}_${formatdate("YYYY_MM_DD_HH_mm_ss", timestamp())}"
@@ -66,6 +70,8 @@ source "amazon-ebs" "my-ami" {
     volume_size           = var.VOLUME_SIZE
     volume_type           = var.VOLUME_TYPE
   }
+
+  ami_users = [var.AMI_USER]
 }
 
 
