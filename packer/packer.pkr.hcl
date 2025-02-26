@@ -16,12 +16,30 @@ variable "PRT_NBR" { type = string }
 variable "ssh_username" { type = string }
 variable "subnet_id" { type = string }
 variable "instance_type" { type = string }
-variable "region" { type = string default = "us-east-1" }
-variable "AMI_NAME" { type = string default = "csye6225_health_checker" }
-variable "AMI_DESCRIPTION" { type = string default = "AMI for CSYE6225 Assignment 4" }
-variable "VOLUME_SIZE" { type = number default = 8 }
-variable "VOLUME_TYPE" { type = string default = "gp3" }
-variable "OWNER_ID" { type = string default = "099720109477" }
+variable "region" {
+  type    = string
+  default = "us-east-1"
+}
+variable "AMI_NAME" {
+  type    = string
+  default = "csye6225_health_checker"
+}
+variable "AMI_DESCRIPTION" {
+  type    = string
+  default = "AMI for CSYE6225 Assignment 4"
+}
+variable "VOLUME_SIZE" {
+  type    = number
+  default = 8
+}
+variable "VOLUME_TYPE" {
+  type    = string
+  default = "gp3"
+}
+variable "OWNER_ID" {
+  type    = string
+  default = "099720109477"
+}
 
 # Amazon AMI Source Configuration
 source "amazon-ebs" "my-ami" {
