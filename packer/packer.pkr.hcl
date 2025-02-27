@@ -79,6 +79,10 @@ variable "GCP_DEMO_PROJECT_ID" {
   type = string
 }
 
+variable "GCP_SERVICE_ACCOUNT_EMAIL" {
+  type = string
+}
+
 
 # Amazon AMI Source Configuration
 source "amazon-ebs" "my-ami" {
@@ -163,9 +167,8 @@ build {
   post-processor "shell-local" {
     only = ["googlecompute.ubuntu"]
     inline = [
-      "gcloud compute images add-iam-policy-binding ${var.GCP_IMAGE_NAME} --member=projectViewer:${var.GCP_DEMO_PROJECT_ID} --role=roles/compute.imageUser --project=${var.GCP_PROJECT_ID}"
+      "gcloud compute images add-iam-policy-binding ${var.GCP_IMAGE_NAME} --member=serviceAccount:${var.GCP_SERVICE_ACCOUNT_EMAIL} --role=roles/compute.imageUser --project=${var.GCP_PROJECT_ID}"
     ]
-
   }
 
   post-processor "manifest" {
