@@ -6,7 +6,7 @@ set -e
 export DEBIAN_FRONTEND=noninteractive
 
 # Updating package lists...
-sudo apt update -y
+sudo apt update -y && sudo apt upgrade -y
 
 # Installing JDK 17...
 sudo apt install -y openjdk-17-jdk
