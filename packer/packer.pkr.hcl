@@ -80,7 +80,7 @@ variable "GCP_DEMO_PROJECT_ID" {
 }
 
 variable "GCP_SERVICE_ACCOUNT_EMAIL" {
-  type= string
+  type = string
 }
 
 
