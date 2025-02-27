@@ -44,7 +44,10 @@ variable "AMI_USER" {
   type = string
 }
 
-variable "GCP_PROJECT_ID" { type = string }
+variable "GCP_PROJECT_ID" {
+  type    = string
+  default = "gcp-dev-452117"
+}
 variable "GCP_ZONE" {
   type    = string
   default = "us-central1-a"
