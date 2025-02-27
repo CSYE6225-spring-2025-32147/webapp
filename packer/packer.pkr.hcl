@@ -4,6 +4,10 @@ packer {
       version = ">= 1.0.0, <2.0.0"
       source  = "github.com/hashicorp/amazon"
     }
+    googlecompute = {
+      version = ">= 1.0.0, <2.0.0"
+      source  = "github.com/hashicorp/googlecompute"
+    }
   }
 }
 
@@ -113,16 +117,14 @@ source "googlecompute" "ubuntu" {
   image_description = var.GCP_IMAGE_DESCRIPTION
 
   # Use the latest Ubuntu 24.04 LTS image
-  source_image_filter {
-    family = "ubuntu-2404-lts"
+  source_image_family = "ubuntu-2404-lts"
+
+  disk {
+    size = var.GCP_DISK_SIZE
+    type = var.GCP_DISK_TYPE
   }
-  disk_size_gb = var.GCP_DISK_SIZE
-  disk_type    = var.GCP_DISK_TYPE
 
-  ssh_username   = var.SSH_USERNAME
-  gcp_access_key = var.GCP_ACCESS_KEY
-
-
+  ssh_username = var.SSH_USERNAME
 }
 
 
