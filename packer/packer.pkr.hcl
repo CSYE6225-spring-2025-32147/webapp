@@ -75,6 +75,10 @@ variable "GCP_DISK_TYPE" {
   type    = string
   default = "pd-balanced"
 }
+variable "GCP_DEMO_PROJECT_ID" {
+  type = string
+}
+
 
 # Amazon AMI Source Configuration
 source "amazon-ebs" "my-ami" {
@@ -154,6 +158,12 @@ build {
 
   provisioner "shell" {
     script = "scripts/systemd-setup.sh"
+  }
+
+  post-processor "shell-local" {
+    inline = [
+      "gcloud compute images add-iam-policy-binding ${var.GCP_IMAGE_NAME}-${formatdate("YYYY-MM-DD-HH-mm-ss", timestamp())} --member=projectViewer:${var.GCP_DEMO_PROJECT_ID} --role=roles/compute.imageUser --project=${var.GCP_PROJECT_ID}"
+    ]
   }
 
   post-processor "manifest" {
