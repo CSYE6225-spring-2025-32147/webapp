@@ -102,11 +102,11 @@ source "amazon-ebs" "my-ami" {
 
 
 source "googlecompute" "gcp-image" {
-  project_id      = var.GCP_PROJECT_ID
-  zone            = var.GCP_ZONE
-  machine_type    = var.GCP_MACHINE_TYPE
-  image_name      = "${var.GCP_IMAGE_NAME}_${formatdate("YYYY_MM_DD_HH_mm_ss", timestamp())}"
-  image_family    = "csye6225-health-checker-family"
+  project_id        = var.GCP_PROJECT_ID
+  zone              = var.GCP_ZONE
+  machine_type      = var.GCP_MACHINE_TYPE
+  image_name        = "${var.GCP_IMAGE_NAME}_${formatdate("YYYY_MM_DD_HH_mm_ss", timestamp())}"
+  image_family      = "csye6225-health-checker-family"
   image_description = var.GCP_IMAGE_DESCRIPTION
 
   # Use the latest Ubuntu 24.04 LTS image
@@ -116,8 +116,8 @@ source "googlecompute" "gcp-image" {
   disk_size_gb = var.GCP_DISK_SIZE
   disk_type    = var.GCP_DISK_TYPE
 
-  ssh_username = var.SSH_USERNAME
-  gcp_access_key=var.GCP_ACCESS_KEY
+  ssh_username   = var.SSH_USERNAME
+  gcp_access_key = var.GCP_ACCESS_KEY
 
 
 }
