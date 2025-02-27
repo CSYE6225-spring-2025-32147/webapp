@@ -162,7 +162,7 @@ build {
 
   post-processor "shell-local" {
     inline = [
-      "gcloud compute images add-iam-policy-binding ${var.GCP_IMAGE_NAME}-${formatdate("YYYY-MM-DD-HH-mm-ss", timestamp())} --member=projectViewer:${var.GCP_DEMO_PROJECT_ID} --role=roles/compute.imageUser --project=${var.GCP_PROJECT_ID}"
+      "gcloud compute images add-iam-policy-binding {{ build_name }} --member=projectViewer:${var.GCP_DEMO_PROJECT_ID} --role=roles/compute.imageUser --project=${var.GCP_PROJECT_ID}"
     ]
   }
 
