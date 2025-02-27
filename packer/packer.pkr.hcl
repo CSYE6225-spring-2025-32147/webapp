@@ -161,8 +161,9 @@ build {
   }
 
   post-processor "shell-local" {
+    only = ["googlecompute.ubuntu"]
     inline = [
-      "gcloud compute images add-iam-policy-binding {{ build_name }} --member=projectViewer:${var.GCP_DEMO_PROJECT_ID} --role=roles/compute.imageUser --project=${var.GCP_PROJECT_ID}"
+      "gcloud compute images add-iam-policy-binding {{ artifact_id }} --member=projectViewer:${var.GCP_DEMO_PROJECT_ID} --role=roles/compute.imageUser --project=${var.GCP_PROJECT_ID}"
     ]
   }
 
