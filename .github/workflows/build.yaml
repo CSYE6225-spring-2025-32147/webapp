@@ -68,6 +68,9 @@ jobs:
       - name: Install Packer
         uses: hashicorp/setup-packer@main
 
+      - name: Install Packer Google Cloud Plugin
+        run: packer plugins install github.com/hashicorp/googlecompute
+
       - name: Initialize Packer
         working-directory: packer
         run: packer init .
