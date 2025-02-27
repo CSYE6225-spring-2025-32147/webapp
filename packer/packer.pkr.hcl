@@ -79,9 +79,6 @@ variable "GCP_DEMO_PROJECT_ID" {
   type = string
 }
 
-variable "GCP_SERVICE_ACCOUNT_EMAIL" {
-  type = string
-}
 
 
 # Amazon AMI Source Configuration
