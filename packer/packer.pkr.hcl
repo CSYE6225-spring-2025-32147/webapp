@@ -119,7 +119,7 @@ source "googlecompute" "ubuntu" {
   project_id        = var.GCP_PROJECT_ID
   zone              = var.GCP_ZONE
   machine_type      = var.GCP_MACHINE_TYPE
-  image_name        = var.GCP_IMAGE_NAME
+  image_name        = "${var.GCP_IMAGE_NAME}-${formatdate("YYYY-MM-DD-HH-mm-ss", timestamp())}"
   image_family      = "csye6225-health-checker-family"
   image_description = var.GCP_IMAGE_DESCRIPTION
 
@@ -164,12 +164,6 @@ build {
     script = "scripts/systemd-setup.sh"
   }
 
-  post-processor "shell-local" {
-    only = ["googlecompute.ubuntu"]
-    inline = [
-      "gcloud compute images add-iam-policy-binding ${var.GCP_IMAGE_NAME} --member=serviceAccount:${var.GCP_SERVICE_ACCOUNT_EMAIL} --role=roles/compute.imageUser --project=${var.GCP_PROJECT_ID}"
-    ]
-  }
 
   post-processor "manifest" {
     output = "manifest.json"
