@@ -115,7 +115,7 @@ source "googlecompute" "ubuntu" {
   project_id        = var.GCP_PROJECT_ID
   zone              = var.GCP_ZONE
   machine_type      = var.GCP_MACHINE_TYPE
-  image_name        = "${var.GCP_IMAGE_NAME}-${formatdate("YYYY-MM-DD-HH-mm-ss", timestamp())}"
+  image_name        = var.GCP_IMAGE_NAME
   image_family      = "csye6225-health-checker-family"
   image_description = var.GCP_IMAGE_DESCRIPTION
 
@@ -161,9 +161,11 @@ build {
   }
 
   post-processor "shell-local" {
+    only = ["googlecompute.ubuntu"]
     inline = [
-      "gcloud compute images add-iam-policy-binding {{ build_name }} --member=projectViewer:${var.GCP_DEMO_PROJECT_ID} --role=roles/compute.imageUser --project=${var.GCP_PROJECT_ID}"
+      "gcloud compute images add-iam-policy-binding ${var.GCP_IMAGE_NAME} --member=projectViewer:${var.GCP_DEMO_PROJECT_ID} --role=roles/compute.imageUser --project=${var.GCP_PROJECT_ID}"
     ]
+
   }
 
   post-processor "manifest" {
