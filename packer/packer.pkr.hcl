@@ -119,10 +119,8 @@ source "googlecompute" "ubuntu" {
   # Use the latest Ubuntu 24.04 LTS image
   source_image_family = "ubuntu-2404-lts"
 
-  disk {
-    size = var.GCP_DISK_SIZE
-    type = var.GCP_DISK_TYPE
-  }
+  disk_size = var.GCP_DISK_SIZE
+  disk_type = var.GCP_DISK_TYPE
 
   ssh_username = var.SSH_USERNAME
 }
