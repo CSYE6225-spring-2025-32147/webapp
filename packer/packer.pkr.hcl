@@ -58,7 +58,6 @@ variable "GCP_ZONE" {
 }
 variable "GCP_MACHINE_TYPE" {
   type    = string
-  default = "e2-mirco"
 }
 variable "GCP_IMAGE_NAME" {
   type    = string
