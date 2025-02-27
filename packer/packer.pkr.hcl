@@ -4,6 +4,10 @@ packer {
       version = ">= 1.0.0, <2.0.0"
       source  = "github.com/hashicorp/amazon"
     }
+    googlecompute = {
+      version = ">= 1.0.0, <2.0.0"
+      source  = "github.com/hashicorp/googlecompute"
+    }
   }
 }
 
@@ -44,6 +48,35 @@ variable "AMI_USER" {
   type = string
 }
 
+variable "GCP_PROJECT_ID" {
+  type    = string
+  default = "gcp-dev-452117"
+}
+variable "GCP_ZONE" {
+  type    = string
+  default = "us-central1-a"
+}
+variable "GCP_MACHINE_TYPE" {
+  type    = string
+  default = "e2-mirco"
+}
+variable "GCP_IMAGE_NAME" {
+  type    = string
+  default = "csye6225-health-checker-gcp"
+}
+variable "GCP_IMAGE_DESCRIPTION" {
+  type    = string
+  default = "Custom GCP Image for CSYE6225"
+}
+variable "GCP_DISK_SIZE" {
+  type    = number
+  default = 25
+}
+variable "GCP_DISK_TYPE" {
+  type    = string
+  default = "pd-balanced"
+}
+
 # Amazon AMI Source Configuration
 source "amazon-ebs" "my-ami" {
   ami_name        = "${var.AMI_NAME}_${formatdate("YYYY_MM_DD_HH_mm_ss", timestamp())}"
@@ -75,8 +108,30 @@ source "amazon-ebs" "my-ami" {
 }
 
 
+source "googlecompute" "ubuntu" {
+  project_id        = var.GCP_PROJECT_ID
+  zone              = var.GCP_ZONE
+  machine_type      = var.GCP_MACHINE_TYPE
+  image_name        = "${var.GCP_IMAGE_NAME}-${formatdate("YYYY-MM-DD-HH-mm-ss", timestamp())}"
+  image_family      = "csye6225-health-checker-family"
+  image_description = var.GCP_IMAGE_DESCRIPTION
+
+  # Use the latest Ubuntu 24.04 LTS image
+  source_image_family = "ubuntu-2404-lts"
+
+  disk_size = var.GCP_DISK_SIZE
+  disk_type = var.GCP_DISK_TYPE
+
+  ssh_username = var.SSH_USERNAME
+}
+
+
 build {
-  sources = ["source.amazon-ebs.my-ami"]
+  sources = [
+    "source.amazon-ebs.my-ami",
+    "source.googlecompute.ubuntu"
+  ]
+
 
   provisioner "shell" {
     environment_vars = [

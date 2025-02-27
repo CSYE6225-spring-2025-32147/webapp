@@ -17,6 +17,7 @@ jobs:
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+      GCP_ACCESS_KEY: ${{ secrets.GCP_ACCESS_KEY }}
 
       # Application Variables
       DB_URL: ${{ secrets.DB_URL }}
@@ -61,6 +62,18 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.REGION }}
 
+      - name: Configure GCP Credentials
+        uses: google-github-actions/auth@v1
+        with:
+          credentials_json: ${{ secrets.GCP_ACCESS_KEY }}
+
+      - name: Setting GCP SDK
+        uses: google-github-actions/setup-gcloud@v2
+
+      - name: Setting GCP Access Key
+        run: |
+          echo '${{ secrets.GCP_ACCESS_KEY }}' >> .gcp-key.json
+
       - name: Set Up JDK 17
         uses: actions/setup-java@v3
         with:
@@ -72,6 +85,9 @@ jobs:
 
       - name: Install Packer
         uses: hashicorp/setup-packer@main
+
+      - name: Install Packer Google Cloud Plugin
+        run: packer plugins install github.com/hashicorp/googlecompute
 
       - name: Initialize Packer
         working-directory: packer
