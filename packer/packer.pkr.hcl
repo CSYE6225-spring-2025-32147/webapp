@@ -104,7 +104,7 @@ source "amazon-ebs" "my-ami" {
 }
 
 
-source "googlecompute" "gcp-image" {
+source "googlecompute" "ubuntu" {
   project_id        = var.GCP_PROJECT_ID
   zone              = var.GCP_ZONE
   machine_type      = var.GCP_MACHINE_TYPE
@@ -129,7 +129,7 @@ source "googlecompute" "gcp-image" {
 build {
   sources = [
     "source.amazon-ebs.my-ami",
-    "source.googlecompute.gcp-image"
+    "source.googlecompute.ubuntu"
   ]
 
 
