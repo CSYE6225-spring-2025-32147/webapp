@@ -121,7 +121,7 @@ source "googlecompute" "ubuntu" {
   image_description = var.GCP_IMAGE_DESCRIPTION
 
   # Use the latest Ubuntu 24.04 LTS image
-  source_image_family = "ubuntu-2204-lts"
+  source_image_family = "ubuntu-minimal-2404-lts-amd64"
 
   disk_size = var.GCP_DISK_SIZE
   disk_type = var.GCP_DISK_TYPE
