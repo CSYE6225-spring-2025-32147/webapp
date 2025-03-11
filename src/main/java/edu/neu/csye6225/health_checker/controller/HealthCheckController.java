@@ -16,7 +16,6 @@ public class HealthCheckController {
         this.healthCheckerService = healthCheckerService;
     }
 
-
     @GetMapping("/healthz")
     public ResponseEntity<Void> checkHealth(@RequestBody(required = false) String payload, @RequestParam Map<String, String> queryParams) {
         if ((payload != null && !payload.isEmpty()) || (queryParams!=null && !queryParams.isEmpty())) {
