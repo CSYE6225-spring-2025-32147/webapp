@@ -10,7 +10,7 @@ This is a **Cloud Native Web** application that performs a health check using a 
 
 ### 1. Install Java 17 (or later)
 
-Ensure you have Java installed:
+Ensure you have Java installed: 
 ```sh
 java -version
 ```
