@@ -150,7 +150,7 @@ build {
   }
 
   provisioner "file" {
-    source      = "../target/app-health-checker-0.0.1-SNAPSHOT.jar"
+    source      = "../target/health-checker-0.0.1-SNAPSHOT.jar"
     destination = "/tmp/"
   }
 
