@@ -19,22 +19,27 @@ public class HealthCheck {
 
 
     public HealthCheck() {
+
         this.dateTime = LocalDateTime.now(ZoneOffset.UTC);
     }
 
     public Long getCheckId() {
+
         return checkId;
     }
 
     public void setCheckId(Long checkId) {
+
         this.checkId = checkId;
     }
 
     public LocalDateTime getDatetime() {
+
         return dateTime;
     }
 
     public void setDatetime(LocalDateTime datetime) {
+
         this.dateTime = datetime;
     }
 }

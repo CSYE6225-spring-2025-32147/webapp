@@ -29,7 +29,7 @@ jobs:
       PKR_VAR_aws_instance_type: ${{ secrets.INSTANCE_TYPE }}
       PKR_VAR_aws_region: ${{ secrets.REGION }}
       PKR_VAR_aws_ami_user: ${{ secrets.AMI_USER }}
-      PKR_VAR_aws_machine_type: ${{ secrets.GCP_MACHINE_TYPE }}
+      PKR_VAR_gcp_machine_type: ${{ secrets.GCP_MACHINE_TYPE }}
       PKR_VAR_gcp_demo_project_id: ${{ secrets.GCP_DEMO_PROJECT_ID }}
 
     services:
@@ -46,15 +46,15 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Configure GCP Credentials
+      - name: Authenticate GCP Credentials
         uses: google-github-actions/auth@v1
         with:
           credentials_json: ${{ secrets.GCP_ACCESS_KEY }}
 
-      - name: Setting GCP SDK
+      - name: Setting up GCP SDK
         uses: google-github-actions/setup-gcloud@v2
 
-      - name: Setting GCP Access Key
+      - name: Store GCP Access Key Locally
         run: |
           echo '${{ secrets.GCP_ACCESS_KEY }}' >> .gcp-key.json  
 
@@ -64,7 +64,7 @@ jobs:
           distribution: 'temurin'
           java-version: '17'
 
-      - name: Set Up Dependencies and Run Tests
+      - name: Install Dependencies and Run Tests
         run: mvn clean -B package
 
       - name: Install Packer
@@ -77,10 +77,10 @@ jobs:
         working-directory: packer
         run: packer init .
 
-      - name: Run Packer fmt Check
+      - name: Validate packer formatting
         working-directory: packer
         run: packer fmt -check .
 
-      - name: Run Packer Validate
+      - name: Run Packer Validation
         working-directory: packer
         run: packer validate .
