@@ -8,10 +8,7 @@ packer {
 }
 
 # Database Configuration Variables
-variable "database_url" { type = string }
-variable "database_username" { type = string }
-variable "database_password" { type = string }
-variable "database_name" { type = string }
+
 
 # SSH Configuration
 variable "ssh_user" { type = string }
