@@ -83,8 +83,7 @@ source "amazon-ebs" "aws_ami" {
 # Build Configuration
 build {
   sources = [
-    "source.amazon-ebs.aws_ami",
-    "source.googlecompute.gcp_image"
+    "source.amazon-ebs.aws_ami"
   ]
 
   provisioner "shell" {
