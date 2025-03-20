@@ -17,7 +17,6 @@ jobs:
     env:
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-      GCP_ACCESS_KEY: ${{ secrets.GCP_ACCESS_KEY }}
 
       # Application Variables
       database_url: ${{ secrets.database_url }}
@@ -31,10 +30,6 @@ jobs:
       PKR_VAR_aws_volume_size: ${{ secrets.aws_volume_size }}
       PKR_VAR_aws_volume_type: ${{ secrets.aws_volume_type }}
       PKR_VAR_aws_ami_user: ${{ secrets.aws_ami_user }}
-
-      # GCP Packer Variables
-      PKR_VAR_gcp_machine_type: ${{ secrets.gcp_machine_type}}
-      PKR_VAR_gcp_demo_project_id: ${{ secrets.gcp_demo_project_id}}
 
       # Common Variables
       PKR_VAR_database_url: ${{ secrets.database_url }}
@@ -53,7 +48,6 @@ jobs:
           MYSQL_DATABASE: ${{ secrets.database_name}}
         options: --health-cmd="mysqladmin ping --silent" --health-interval=10s --health-timeout=5s --health-retries=3
 
-
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
@@ -67,18 +61,6 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ secrets.REGION }}
-
-      - name: Configure GCP Credentials
-        uses: google-github-actions/auth@v1
-        with:
-          credentials_json: ${{ secrets.GCP_ACCESS_KEY }}
-
-      - name: Setting GCP SDK
-        uses: google-github-actions/setup-gcloud@v2
-
-      - name: Setting GCP Access Key
-        run: |
-          echo '${{ secrets.GCP_ACCESS_KEY }}' >> .gcp-key.json
 
       - name: Set Up JDK 17
         uses: actions/setup-java@v3
