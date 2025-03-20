@@ -95,6 +95,7 @@ public class AwsS3Controller {
             }
 
             AwsS3FileMetadata fileDetails = fileDetailsOpt.get();
+            metadataRepository.deleteById(fileId); 
 
             // Delete file from S3 using correct key
             boolean deletionStatus = cloudStorageService.deleteFile(fileDetails.getId() + "/" + fileDetails.getFileName());
@@ -103,7 +104,7 @@ public class AwsS3Controller {
             }
 
             // Remove metadata
-            metadataRepository.deleteById(fileId);
+           
 
             return ResponseEntity.noContent().build();
         } catch (Exception e) {
