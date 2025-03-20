@@ -1,7 +1,7 @@
 package edu.neu.csye6225.health_checker.controller;
 
-import edu.neu.csye6225.health_checker.entity.S3FileMetadata;
-import edu.neu.csye6225.health_checker.repository.FileMetadataRepository;
+import edu.neu.csye6225.health_checker.entity.AwsS3FileMetadata;
+import edu.neu.csye6225.health_checker.repository.AwsS3FileMetadataRepository;
 import edu.neu.csye6225.health_checker.service.AwsS3Service;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.ResponseEntity;
@@ -20,12 +20,12 @@ import java.util.UUID;
 public class AwsS3Controller {
 
     private final AwsS3Service cloudStorageService;
-    private final FileMetadataRepository metadataRepository;
+    private final AwsS3FileMetadataRepository metadataRepository;
 
     @Value("${aws.s3.bucket-name}")
     private String storageBucket;
 
-    public AwsS3Controller(AwsS3Service cloudStorageService, FileMetadataRepository metadataRepository) {
+    public AwsS3Controller(AwsS3Service cloudStorageService, AwsS3FileMetadataRepository metadataRepository) {
         this.cloudStorageService = cloudStorageService;
         this.metadataRepository = metadataRepository;
     }
@@ -39,7 +39,7 @@ public class AwsS3Controller {
 
         try {
             // Store metadata first
-            S3FileMetadata fileDetails = new S3FileMetadata();
+            AwsS3FileMetadata fileDetails = new AwsS3FileMetadata();
             fileDetails.setId(uniqueId);
             fileDetails.setFileName(document.getOriginalFilename());
             fileDetails.setUrl(documentUrl);
@@ -66,12 +66,12 @@ public class AwsS3Controller {
     public ResponseEntity<Map<String, String>> fetchFile(@PathVariable String fileId) {
         try {
             // Retrieve metadata from DB
-            Optional<S3FileMetadata> fileDetailsOpt = metadataRepository.findById(fileId);
+            Optional<AwsS3FileMetadata> fileDetailsOpt = metadataRepository.findById(fileId);
             if (fileDetailsOpt.isEmpty()) {
                 return ResponseEntity.status(404).body(Map.of("error", "File not found"));
             }
 
-            S3FileMetadata fileDetails = fileDetailsOpt.get();
+            AwsS3FileMetadata fileDetails = fileDetailsOpt.get();
 
             // Construct response
             Map<String, String> responsePayload = new HashMap<>();
@@ -89,12 +89,12 @@ public class AwsS3Controller {
     @DeleteMapping("/file/{fileId}")
     public ResponseEntity<Map<String, String>> removeFile(@PathVariable String fileId) {
         try {
-            Optional<S3FileMetadata> fileDetailsOpt = metadataRepository.findById(fileId);
+            Optional<AwsS3FileMetadata> fileDetailsOpt = metadataRepository.findById(fileId);
             if (fileDetailsOpt.isEmpty()) {
                 return ResponseEntity.status(404).body(Map.of("error", "File not found"));
             }
 
-            S3FileMetadata fileDetails = fileDetailsOpt.get();
+            AwsS3FileMetadata fileDetails = fileDetailsOpt.get();
 
             // Delete file from S3 using correct key
             boolean deletionStatus = cloudStorageService.deleteFile(fileDetails.getId() + "/" + fileDetails.getFileName());
