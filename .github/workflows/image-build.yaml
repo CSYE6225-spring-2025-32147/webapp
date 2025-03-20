@@ -19,24 +19,24 @@ jobs:
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
       # Application Variables
-      database_url: ${{ secrets.database_url }}
-      database_username: ${{ secrets.database_username }}
-      database_passwordd: ${{ secrets.database_password }}
+      database_url: ${{ secrets.DB_URL }}
+      database_username: ${{ secrets.DB_USRNAME }}
+      database_passwordd: ${{ secrets.DB_PASSWORD }}
 
       # AWS Packer Variables
-      PKR_VAR_aws_region: ${{ secrets.aws_region}}
-      PKR_VAR_aws_instance_type: ${{ secrets.aws_instance_type}}
-      PKR_VAR_aws_subnet_id: ${{ secrets.aws_subnet_id }}
-      PKR_VAR_aws_volume_size: ${{ secrets.aws_volume_size }}
-      PKR_VAR_aws_volume_type: ${{ secrets.aws_volume_type }}
-      PKR_VAR_aws_ami_user: ${{ secrets.aws_ami_user }}
+      PKR_VAR_aws_region: ${{ secrets.AWS_REGION}}
+      PKR_VAR_aws_instance_type: ${{ secrets.INSTANCE_TYPE}}
+      PKR_VAR_aws_subnet_id: ${{ secrets.SUBNET_ID}}
+      PKR_VAR_aws_volume_size: ${{ secrets.VOLUME_SIZE }}
+      PKR_VAR_aws_volume_type: ${{ secrets.VOLUME_TYPE }}
+      PKR_VAR_aws_ami_user: ${{ secrets.AMI_USER }}
 
       # Common Variables
-      PKR_VAR_database_url: ${{ secrets.database_url }}
-      PKR_VAR_database_username: ${{ secrets.database_username }}
-      PKR_VAR_database_password: ${{ secrets.database_password }}
-      PKR_VAR_database_name: ${{ secrets.database_NAME }}
-      PKR_VAR_ssh_user: ${{ secrets.ssh_username }}
+      PKR_VAR_database_url: ${{ secrets.DB_URL }}
+      PKR_VAR_database_username: ${{ secrets.DB_USRNAME }}
+      PKR_VAR_database_password: ${{ secrets.DB_PASSWORD }}
+      PKR_VAR_database_name: ${{ secrets.DB_DATABASE }}
+      PKR_VAR_ssh_user: ${{ secrets.SSH_USERNAME }}
 
     services:
       mysql:
@@ -60,7 +60,7 @@ jobs:
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.REGION }}
+          aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Set Up JDK 17
         uses: actions/setup-java@v3
