@@ -21,10 +21,6 @@ jobs:
       AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
 
       # Packer Variables (Automatically Picked Up)
-      PKR_VAR_database_url: ${{ secrets.DB_URL }}
-      PKR_VAR_database_username: ${{ secrets.DB_USRNAME }}
-      PKR_VAR_database_password: ${{ secrets.DB_PASSWORD }}
-      PKR_VAR_database_name: ${{ secrets.DB_DATABASE }}
       PKR_VAR_aws_volume_sze: ${{ secrets.VOLUME_SIZE }}
       PKR_VAR_aws_volume_type: ${{ secrets.VOLUME_TYPE }}
       PKR_VAR_ssh_user: ${{ secrets.SSH_USERNAME }}

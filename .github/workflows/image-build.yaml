@@ -19,9 +19,9 @@ jobs:
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
       # Application Variables
-      database_url: ${{ secrets.DB_URL }}
-      database_username: ${{ secrets.DB_USRNAME }}
-      database_passwordd: ${{ secrets.DB_PASSWORD }}
+      DB_URL: ${{ secrets.DB_URL }}
+      DB_USRNAME: ${{ secrets.DB_USRNAME }}
+      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
 
       # AWS Packer Variables
       PKR_VAR_aws_region: ${{ secrets.AWS_REGION}}
@@ -32,10 +32,6 @@ jobs:
       PKR_VAR_aws_ami_user: ${{ secrets.AMI_USER }}
 
       # Common Variables
-      PKR_VAR_database_url: ${{ secrets.DB_URL }}
-      PKR_VAR_database_username: ${{ secrets.DB_USRNAME }}
-      PKR_VAR_database_password: ${{ secrets.DB_PASSWORD }}
-      PKR_VAR_database_name: ${{ secrets.DB_DATABASE }}
       PKR_VAR_ssh_user: ${{ secrets.SSH_USERNAME }}
 
     services:
