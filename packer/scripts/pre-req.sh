@@ -21,4 +21,4 @@ sudo groupadd -f csye6225
 sudo useradd -m -g csye6225 -s /usr/sbin/nologin csye6225
 
 
-echo "MySQL root password has been set and environment variables have been configured."
+echo "All the required dependencies are successfully installed "

@@ -4,10 +4,6 @@ packer {
       version = ">= 1.0.0, <2.0.0"
       source  = "github.com/hashicorp/amazon"
     }
-    googlecompute = {
-      version = ">= 1.0.0, <2.0.0"
-      source  = "github.com/hashicorp/googlecompute"
-    }
   }
 }
 
@@ -52,38 +48,6 @@ variable "aws_ami_user" {
   type = string
 }
 
-# GCP Configuration
-variable "gcp_project_id" {
-  type    = string
-  default = "gcp-dev-452117"
-}
-variable "gcp_zone" {
-  type    = string
-  default = "us-central1-a"
-}
-variable "gcp_machine_type" {
-  type = string
-}
-variable "gcp_image_name" {
-  type    = string
-  default = "app-health-checker-gcp"
-}
-variable "gcp_image_description" {
-  type    = string
-  default = "Custom GCP Image for Application Deployment"
-}
-variable "gcp_disk_size" {
-  type    = number
-  default = 25
-}
-variable "gcp_disk_type" {
-  type    = string
-  default = "pd-balanced"
-}
-variable "gcp_demo_project_id" {
-  type = string
-}
-
 # Amazon AMI Source Configuration
 source "amazon-ebs" "aws_ami" {
   ami_name        = "${var.aws_ami_name}_${formatdate("YYYY_MM_DD_HH_mm_ss", timestamp())}"
@@ -114,23 +78,7 @@ source "amazon-ebs" "aws_ami" {
   ami_users = [var.aws_ami_user]
 }
 
-# GCP Image Configuration
-source "googlecompute" "gcp_image" {
-  project_id        = var.gcp_project_id
-  zone              = var.gcp_zone
-  machine_type      = var.gcp_machine_type
-  image_name        = "${var.gcp_image_name}-${formatdate("YYYY-MM-DD-HH-mm-ss", timestamp())}"
-  image_family      = "csye6225-health-checker-family"
-  image_description = var.gcp_image_description
 
-  # Use the latest Ubuntu 24.04 LTS image
-  source_image_family = "ubuntu-minimal-2404-lts-amd64"
-
-  disk_size = var.gcp_disk_size
-  disk_type = var.gcp_disk_type
-
-  ssh_username = var.ssh_user
-}
 
 # Build Configuration
 build {
@@ -140,12 +88,6 @@ build {
   ]
 
   provisioner "shell" {
-    environment_vars = [
-      "DATABASE_URL=${var.database_url}",
-      "DATABASE_USERNAME=${var.database_username}",
-      "DATABASE_PASSWORD=${var.database_password}",
-      "DATABASE_NAME=${var.database_name}"
-    ]
     script = "scripts/pre-req.sh"
   }
 
