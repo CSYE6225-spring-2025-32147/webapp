@@ -29,8 +29,7 @@ jobs:
       PKR_VAR_aws_instance_type: ${{ secrets.INSTANCE_TYPE }}
       PKR_VAR_aws_region: ${{ secrets.REGION }}
       PKR_VAR_aws_ami_user: ${{ secrets.AMI_USER }}
-      PKR_VAR_gcp_machine_type: ${{ secrets.GCP_MACHINE_TYPE }}
-      PKR_VAR_gcp_demo_project_id: ${{ secrets.GCP_DEMO_PROJECT_ID }}
+
 
     services:
       mysql:
@@ -46,18 +45,6 @@ jobs:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Authenticate GCP Credentials
-        uses: google-github-actions/auth@v1
-        with:
-          credentials_json: ${{ secrets.GCP_ACCESS_KEY }}
-
-      - name: Setting up GCP SDK
-        uses: google-github-actions/setup-gcloud@v2
-
-      - name: Store GCP Access Key Locally
-        run: |
-          echo '${{ secrets.GCP_ACCESS_KEY }}' >> .gcp-key.json  
-
       - name: Set Up JDK 17
         uses: actions/setup-java@v3
         with:
@@ -69,9 +56,6 @@ jobs:
 
       - name: Install Packer
         uses: hashicorp/setup-packer@main
-
-      - name: Install Packer Google Cloud Plugin
-        run: packer plugins install github.com/hashicorp/googlecompute
 
       - name: Initialize Packer
         working-directory: packer
