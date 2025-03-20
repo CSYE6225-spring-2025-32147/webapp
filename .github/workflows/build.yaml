@@ -16,6 +16,8 @@ jobs:
       DB_URL: ${{ secrets.DB_URL }}
       DB_USRNAME: ${{ secrets.DB_USRNAME }}
       DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+      AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
       # Packer Variables (Automatically Picked Up)
       PKR_VAR_database_url: ${{ secrets.DB_URL }}
@@ -50,6 +52,15 @@ jobs:
         with:
           distribution: 'temurin'
           java-version: '17'
+      - name: Install AWS CLI
+        uses: unfor19/install-aws-cli-action@v1
+
+      - name: Configure AWS Credentials
+        uses: aws-actions/configure-aws-credentials@v2
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.REGION }}
 
       - name: Install Dependencies and Run Tests
         run: mvn clean -B package
