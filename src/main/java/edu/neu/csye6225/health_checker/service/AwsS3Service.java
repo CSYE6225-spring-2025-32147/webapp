@@ -1,5 +1,6 @@
 package edu.neu.csye6225.health_checker.service;
 
+import com.timgroup.statsd.StatsDClient;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Value;
@@ -14,49 +15,65 @@ import software.amazon.awssdk.services.s3.model.*;
 @Service
 public class AwsS3Service {
 
-    private static final Logger LOG = LoggerFactory.getLogger(AwsS3Service.class);
-    private final S3Client cloudClient;
+    private static final Logger log = LoggerFactory.getLogger(AwsS3Service.class);
+
+    private final S3Client s3Client;
+    private final StatsDClient metricsClient;
 
     @Value("${aws.s3.bucket-name}")
-    private String cloudBucket;
+    private String bucketName;
 
-    public AwsS3Service(@Value("${aws.region}") String cloudRegion) {
-        LOG.info("Setting up AWS S3 client with DefaultCredentialsProvider");
-
-        this.cloudClient = S3Client.builder()
-                .region(Region.of(cloudRegion))
+    public AwsS3Service(@Value("${aws.region}") String region, StatsDClient metricsClient) {
+        this.metricsClient = metricsClient;
+        this.s3Client = S3Client.builder()
+                .region(Region.of(region))
                 .credentialsProvider(DefaultCredentialsProvider.create())
                 .build();
+
+        log.info("S3 client configured for region: {}", region);
     }
 
-    public void uploadFileToAwsS3(MultipartFile file, String filePath) throws Exception {
+    public void uploadFileToAwsS3(MultipartFile multipartFile, String objectKey) throws Exception {
+        long startTime = System.currentTimeMillis();
         try {
-            cloudClient.putObject(PutObjectRequest.builder()
-                            .bucket(cloudBucket)
-                            .key(filePath)
-                            .contentType(file.getContentType())
-                            .build(),
-                    RequestBody.fromBytes(file.getBytes()));
-            LOG.info("Successfully uploaded file: {}", filePath);
-        } catch (S3Exception e) {
-            LOG.error("AWS S3 Upload Failed: {}", e.awsErrorDetails().errorMessage());
-            throw e;
+            log.info("uploading file to S3 with key: {}", objectKey);
+
+            PutObjectRequest request = PutObjectRequest.builder()
+                    .bucket(bucketName)
+                    .key(objectKey)
+                    .contentType(multipartFile.getContentType())
+                    .build();
+
+            s3Client.putObject(request, RequestBody.fromBytes(multipartFile.getBytes()));
+
+            log.info("File successfully uploaded to S3 with key: {}", objectKey);
+        } catch (S3Exception ex) {
+            log.error("Error while uploading file to S3 at key: {}", objectKey, ex);
+            throw ex;
+        } finally {
+            metricsClient.recordExecutionTime("s3.upload.time", System.currentTimeMillis() - startTime);
         }
     }
 
-    public boolean deleteFile(String filePath) {
+    public boolean deleteFile(String objectKey) {
+        long startTime = System.currentTimeMillis();
         try {
-            DeleteObjectRequest removalRequest = DeleteObjectRequest.builder()
-                    .bucket(cloudBucket)
-                    .key(filePath)
+            log.info("Initiating deletion of file from S3 with key: {}", objectKey);
+
+            DeleteObjectRequest deleteRequest = DeleteObjectRequest.builder()
+                    .bucket(bucketName)
+                    .key(objectKey)
                     .build();
 
-            cloudClient.deleteObject(removalRequest);
-            LOG.info("File removed successfully: {}", filePath);
+            s3Client.deleteObject(deleteRequest);
+
+            log.info("Successfully deleted object with key: {}", objectKey);
             return true;
-        } catch (S3Exception e) {
-            LOG.error("AWS S3 Deletion Error: {}", e.awsErrorDetails().errorMessage());
+        } catch (S3Exception ex) {
+            log.error("Failed to delete the file from S3 at key: {}", objectKey, ex);
             return false;
+        } finally {
+            metricsClient.recordExecutionTime("s3.delete.time", System.currentTimeMillis() - startTime);
         }
     }
 }

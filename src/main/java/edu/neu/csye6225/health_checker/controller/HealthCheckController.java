@@ -1,5 +1,8 @@
 package edu.neu.csye6225.health_checker.controller;
 
+import com.timgroup.statsd.StatsDClient;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -13,29 +16,46 @@ import java.util.Map;
 public class HealthCheckController {
 
     private final HealthCheckService healthCheckService;
+    private static final Logger logger = LoggerFactory.getLogger(HealthCheckController.class);
+    private final StatsDClient statsDClient;
 
     @Autowired
-    public HealthCheckController(HealthCheckService healthCheckService) {
+    public HealthCheckController(HealthCheckService healthCheckService, StatsDClient statsDClient) {
         this.healthCheckService = healthCheckService;
+        this.statsDClient = statsDClient;
     }
 
     @GetMapping
     public ResponseEntity<Void> checkHealth(
             @RequestBody(required = false) String payload,
-            @RequestParam Map<String, String> queryParams) {
+            @RequestParam(required = false) Map<String, String> queryParams) {
+
+        long start = System.currentTimeMillis();
+
+        statsDClient.incrementCounter("api.healthz.hit");
+        logger.info("Received request at /healthz endpoint");
 
         if (isRequestInvalid(payload, queryParams)) {
+            logger.warn("Request denied: unexpected request body detected");
             return buildResponse(HttpStatus.BAD_REQUEST);
         }
 
         try {
-            if (!healthCheckService.isDatabaseConnected()) {
+            if (!healthCheckService.checkDatabaseStatus()) {
+                logger.error("Health check failed: unable to reach database");
                 throw new RuntimeException("Database connection unavailable");
             }
-            healthCheckService.insertHealthCheck();
+
+            healthCheckService.recordHealthEntry();
+            logger.info("Health check successfully recorded in the database");
             return buildResponse(HttpStatus.OK);
+
         } catch (Exception e) {
+            logger.error("Health check failed", e);
             return buildResponse(HttpStatus.SERVICE_UNAVAILABLE);
+        } finally {
+            long duration = System.currentTimeMillis() - start;
+            statsDClient.recordExecutionTime("api.healthz.time", duration);
         }
     }
 
@@ -43,6 +63,7 @@ public class HealthCheckController {
             RequestMethod.PATCH, RequestMethod.OPTIONS, RequestMethod.TRACE,
             RequestMethod.HEAD})
     public ResponseEntity<Void> handleMethodNotAllowed() {
+        logger.warn("Method not allowed on /healthz");
         return buildResponse(HttpStatus.METHOD_NOT_ALLOWED);
     }
 
