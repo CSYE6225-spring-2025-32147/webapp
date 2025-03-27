@@ -13,21 +13,22 @@ jobs:
 
     env:
       # Application Variables
-      DB_URL: ${{ secrets.DB_URL }}
-      DB_USRNAME: ${{ secrets.DB_USRNAME }}
-      DB_PASSWORD: ${{ secrets.DB_PASSWORD }}
+      DATABASE_URL: ${{ secrets.DATABASE_URL }}
+      DATABASE_USERNAME: ${{ secrets.DATABASE_USERNAME }}
+      DATABASE_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
       AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
       AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
       AWS_BUCKET_NAME: ${{ secrets.AWS_BUCKET_NAME }}
+      AWS_REGION: ${{ secrets.AWS_REGION }}
 
       # Packer Variables (Automatically Picked Up)
-      PKR_VAR_aws_volume_sze: ${{ secrets.VOLUME_SIZE }}
-      PKR_VAR_aws_volume_type: ${{ secrets.VOLUME_TYPE }}
+      PKR_VAR_aws_volume_sze: ${{ secrets.AWS_VOLUME_SIZE }}
+      PKR_VAR_aws_volume_type: ${{ secrets.AWS_VOLUME_TYPE }}
       PKR_VAR_ssh_user: ${{ secrets.SSH_USERNAME }}
-      PKR_VAR_aws_subnet_id: ${{ secrets.SUBNET_ID }}
-      PKR_VAR_aws_instance_type: ${{ secrets.INSTANCE_TYPE }}
-      PKR_VAR_aws_region: ${{ secrets.REGION }}
-      PKR_VAR_aws_ami_user: ${{ secrets.AMI_USER }}
+      PKR_VAR_aws_subnet_id: ${{ secrets.AWS_SUBNET_ID }}
+      PKR_VAR_aws_instance_type: ${{ secrets.AWS_INSTANCE_TYPE }}
+      PKR_VAR_aws_region: ${{ secrets.AWS_REGION }}
+      PKR_VAR_aws_ami_user: ${{ secrets.AWS_AMI_USER }}
 
 
     services:
@@ -36,43 +37,43 @@ jobs:
         ports:
           - 3306:3306
         env:
-          MYSQL_ROOT_PASSWORD: ${{ secrets.DB_PASSWORD }}
-          MYSQL_DATABASE: ${{ secrets.DB_DATABASE }}
+          MYSQL_ROOT_PASSWORD: ${{ secrets.DATABASE_PASSWORD }}
+          MYSQL_DATABASE: ${{ secrets.DATABASE_NAME }}
         options: --health-cmd="mysqladmin ping --silent" --health-interval=10s --health-timeout=5s --health-retries=3
 
     steps:
       - name: Checkout Repository
         uses: actions/checkout@v4
 
-      - name: Set Up JDK 17
+      - name: JDK 17 Set up
         uses: actions/setup-java@v3
         with:
           distribution: 'temurin'
           java-version: '17'
-      - name: Install AWS CLI
+      - name: AWS CLI installation
         uses: unfor19/install-aws-cli-action@v1
 
-      - name: Configure AWS Credentials
+      - name: AWS cli credentials configuration
         uses: aws-actions/configure-aws-credentials@v2
         with:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-          aws-region: ${{ secrets.REGION }}
+          aws-region: ${{ secrets.AWS_REGION }}
 
-      - name: Install Dependencies and Run Tests
+      - name: Install the required Dependencies and Run Tests
         run: mvn clean -B package
 
-      - name: Install Packer
+      - name: Packer Installation
         uses: hashicorp/setup-packer@main
 
-      - name: Initialize Packer
+      - name: Packer Initialization
         working-directory: packer
         run: packer init .
 
-      - name: Validate packer formatting
+      - name: Packer format validation
         working-directory: packer
         run: packer fmt -check .
 
-      - name: Run Packer Validation
+      - name: Validate Packer
         working-directory: packer
         run: packer validate .

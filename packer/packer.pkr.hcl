@@ -7,10 +7,9 @@ packer {
   }
 }
 
-# Database Configuration Variables
 
 
-# SSH Configuration
+
 variable "ssh_user" { type = string }
 
 # AWS Configuration
@@ -45,7 +44,7 @@ variable "aws_ami_user" {
   type = string
 }
 
-# Amazon AMI Source Configuration
+# Configuration for amazon ami source
 source "amazon-ebs" "aws_ami" {
   ami_name        = "${var.aws_ami_name}_${formatdate("YYYY_MM_DD_HH_mm_ss", timestamp())}"
   ami_description = var.aws_ami_description
@@ -77,7 +76,6 @@ source "amazon-ebs" "aws_ami" {
 
 
 
-# Build Configuration
 build {
   sources = [
     "source.amazon-ebs.aws_ami"
@@ -96,6 +94,11 @@ build {
     source      = "csye6225.service"
     destination = "/tmp/"
   }
+  provisioner "file" {
+    source      = "cloudwatch-config.json"
+    destination = "/tmp/"
+  }
+
 
   provisioner "shell" {
     script = "scripts/env-setup.sh"

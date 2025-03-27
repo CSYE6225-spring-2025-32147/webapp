@@ -22,3 +22,9 @@ sudo useradd -m -g csye6225 -s /usr/sbin/nologin csye6225
 
 
 echo "All the required dependencies are successfully installed "
+
+# Install CloudWatch Agent
+echo "Installing CloudWatch Agent..."
+wget https://s3.amazonaws.com/amazoncloudwatch-agent/ubuntu/amd64/latest/amazon-cloudwatch-agent.deb
+sudo dpkg -i amazon-cloudwatch-agent.deb
+rm amazon-cloudwatch-agent.deb
