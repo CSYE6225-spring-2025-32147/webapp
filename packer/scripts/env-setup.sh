@@ -17,3 +17,13 @@ sudo systemctl daemon-reload
 
 # Enable the service to start automatically on system boot
 sudo systemctl enable csye6225.service
+
+
+sudo mkdir -p /opt/aws/amazon-cloudwatch-agent/etc/
+sudo mv /tmp/cloudwatch-config.json /opt/aws/amazon-cloudwatch-agent/etc/amazon-cloudwatch-agent.json
+
+
+
+sudo systemctl enable amazon-cloudwatch-agent
+
+echo "Packer cloudwatch config copied to ami..."
