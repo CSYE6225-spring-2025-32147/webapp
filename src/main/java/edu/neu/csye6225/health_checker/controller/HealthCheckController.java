@@ -9,10 +9,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import edu.neu.csye6225.health_checker.service.HealthCheckService;
+
 import java.util.Map;
 
 @RestController
-@RequestMapping("/healthz")
 public class HealthCheckController {
 
     private final HealthCheckService healthCheckService;
@@ -25,7 +25,17 @@ public class HealthCheckController {
         this.statsDClient = statsDClient;
     }
 
-    @GetMapping
+    @GetMapping("/")
+    public ResponseEntity<String> home() {
+        logger.info("Root context '/' accessed");
+        statsDClient.incrementCounter("api.root.hit");
+
+        return ResponseEntity.ok()
+                .headers(getDefaultHeaders())
+                .body("Welcome to our web application");
+    }
+
+    @GetMapping("/healthz")
     public ResponseEntity<Void> checkHealth(
             @RequestBody(required = false) String payload,
             @RequestParam(required = false) Map<String, String> queryParams) {
@@ -36,7 +46,7 @@ public class HealthCheckController {
         logger.info("Received request at /healthz endpoint");
 
         if (isRequestInvalid(payload, queryParams)) {
-            logger.warn("Request denied: unexpected request body detected");
+            logger.warn("Request denied: unexpected request body or query parameters");
             return buildResponse(HttpStatus.BAD_REQUEST);
         }
 
@@ -59,7 +69,7 @@ public class HealthCheckController {
         }
     }
 
-    @RequestMapping(method = {RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE,
+    @RequestMapping(value = "/healthz", method = {RequestMethod.POST, RequestMethod.PUT, RequestMethod.DELETE,
             RequestMethod.PATCH, RequestMethod.OPTIONS, RequestMethod.TRACE,
             RequestMethod.HEAD})
     public ResponseEntity<Void> handleMethodNotAllowed() {
