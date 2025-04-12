@@ -110,12 +110,13 @@ jobs:
             --query "LaunchTemplateVersions | sort_by(@, &VersionNumber) | [-1].VersionNumber" \
             --output text)
 
-          echo "Creating version $LATEST_VERSION  of launch template"
+          echo "Creating new version from version $LATEST_VERSION  of launch template"
 
           aws ec2 create-launch-template-version \
             --launch-template-id "${{ secrets.LT_ID }}" \
             --source-version "$LATEST_VERSION" \
-            --launch-template-data "{\"ImageId\":\"$AMI_ID\"}"
+            --launch-template-data "{\"ImageId\":\"$AMI_ID\"}" > /dev/null
+
 
           echo "Starting instance refresh on Auto Scaling Group: ${{ secrets.ASGRP_NAME }}"
 
