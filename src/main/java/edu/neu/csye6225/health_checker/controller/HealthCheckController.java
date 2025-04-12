@@ -95,4 +95,38 @@ public class HealthCheckController {
         headers.add("Connection", "keep-alive");
         return headers;
     }
+
+    @GetMapping("/cicd")
+    public ResponseEntity<Void> checkCiCd(
+            @RequestBody(required = false) String payload,
+            @RequestParam(required = false) Map<String, String> queryParams) {
+
+        long start = System.currentTimeMillis();
+
+        statsDClient.incrementCounter("api.healthz.hit");
+        logger.info("Received request at /healthz endpoint");
+
+        if (isRequestInvalid(payload, queryParams)) {
+            logger.warn("Request denied: unexpected request body or query parameters");
+            return buildResponse(HttpStatus.BAD_REQUEST);
+        }
+
+        try {
+            if (!healthCheckService.checkDatabaseStatus()) {
+                logger.error("Health check failed: unable to reach database");
+                throw new RuntimeException("Database connection unavailable");
+            }
+
+            healthCheckService.recordHealthEntry();
+            logger.info("Health check successfully recorded in the database");
+            return buildResponse(HttpStatus.OK);
+
+        } catch (Exception e) {
+            logger.error("Health check failed", e);
+            return buildResponse(HttpStatus.SERVICE_UNAVAILABLE);
+        } finally {
+            long duration = System.currentTimeMillis() - start;
+            statsDClient.recordExecutionTime("api.healthz.time", duration);
+        }
+    }
 }
