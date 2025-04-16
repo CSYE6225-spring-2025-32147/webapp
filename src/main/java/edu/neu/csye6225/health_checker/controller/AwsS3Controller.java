@@ -16,7 +16,7 @@ import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 @RestController
-@RequestMapping("/v1")
+@RequestMapping("/v2")
 public class AwsS3Controller {
 
     private static final Logger logger = LoggerFactory.getLogger(AwsS3Controller.class);
